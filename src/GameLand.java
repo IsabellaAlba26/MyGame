@@ -49,7 +49,7 @@ public class GameLand implements Runnable, KeyListener {
 
     //
     public boolean startScreen=true;
-    public boolean isPlaying=false;
+    public boolean isPlaying;
     public boolean gameOver=false;
 
     //Declare the objects used in the program below
