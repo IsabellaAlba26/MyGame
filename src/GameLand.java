@@ -36,7 +36,7 @@ public class GameLand implements Runnable, KeyListener {
     //Declare the variables used in the program
     //You can set their initial values here if you want
 
-    //Sets the width and height of the program window
+    //Sets the width and height of the program/game window
     final int WIDTH = 1000;
     final int HEIGHT = 700;
 
