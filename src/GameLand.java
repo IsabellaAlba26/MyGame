@@ -49,7 +49,6 @@ public class GameLand implements Runnable, KeyListener {
 
     //
     public boolean startScreen = true;
-    public boolean showRulesScreen = false;
     public boolean level1Screen = false;
     public boolean level1PlayingScreen;
     public boolean level2Screen;
@@ -82,7 +81,6 @@ public class GameLand implements Runnable, KeyListener {
      * STEP 2: Declare an image for your object
      **/
     public Image homescreen;
-    public Image rulesScreen;
     public Image catPic;
     public Image mousePic;
     public Image goldenMousePic;
@@ -117,12 +115,10 @@ public class GameLand implements Runnable, KeyListener {
         //create (construct) the objects needed for the game below
         //for each object that has a picture, load in images as well
         /**STEP 3: construct a specific Hero**/
-        goldenMouse = new Hero(500, 500, 4, 3, 100, 71, true);
 
 
         /**STEP 4: load in the image for your object**/
         homescreen = Toolkit.getDefaultToolkit().getImage("Homescreen.png");
-        rulesScreen = Toolkit.getDefaultToolkit().getImage("rules screen.png");
         catPic = Toolkit.getDefaultToolkit().getImage("cat.png");
         mousePic = Toolkit.getDefaultToolkit().getImage("mouse.png");
         goldenMousePic = Toolkit.getDefaultToolkit().getImage("golden mouse.png");
@@ -146,75 +142,49 @@ public class GameLand implements Runnable, KeyListener {
         // call levels based on booleans
         if (startScreen) {
             startScreen = false;
-            showRulesScreen = true;
-            System.out.println("now show the rules screen");
-        }
-
-        if (showRulesScreen) {
-            showRulesScreen = false;
             level1Screen = true;
-            System.out.println("now show the level 1 screen");
+            System.out.println("go from start screen to level 1 screen");
         }
-
         if (level1Screen) {
             level1Screen = false;
             startLevel1();
+            System.out.println("level 1 is playing");
             level1PlayingScreen = true;
         }
-        if (level1PlayingScreen && score == 30 && elapsedTime >= 0) {
-            level1PlayingScreen = false;
+        if (level1PlayingScreen && score == 30) {
             level2Screen = true;
-        }
-        if (level1PlayingScreen && score < 30 && elapsedTime == 50) {
-            gameOver = true;
         }
         if (level2Screen) {
             level2Screen = false;
             level2PlayingScreen = true;
             startLevel2();
         }
-        if (level2PlayingScreen && score == 30 && elapsedTime >= 0) {
-            level2PlayingScreen = false;
+        if (level2PlayingScreen && score == 30) {
             level3Screen = true;
-        }
-        if (level2PlayingScreen && score < 30 && elapsedTime == 45) {
-            gameOver = true;
         }
         if (level3Screen) {
             level3Screen = false;
             level3PlayingScreen = true;
             startLevel3();
         }
-        if (level3PlayingScreen && score == 30 && elapsedTime >= 0) {
-            level3PlayingScreen = false;
+        if (level3PlayingScreen && score == 30) {
             level4Screen = true;
-        }
-        if (level3PlayingScreen && score < 30 && elapsedTime == 40) {
-            gameOver = true;
         }
         if (level4Screen) {
             level4Screen = false;
             level4PlayingScreen = true;
             startLevel4();
         }
-        if (level4PlayingScreen && score == 30 && elapsedTime >= 0) {
-            level4PlayingScreen = false;
+        if (level4PlayingScreen && score == 30) {
             level5Screen = true;
-        }
-        if (level4PlayingScreen && score < 30 && elapsedTime == 30) {
-            gameOver = true;
         }
         if (level5Screen) {
             level5Screen = false;
             level5PlayingScreen = true;
             startLevel5();
         }
-        if (level5PlayingScreen && score == 30 && elapsedTime >= 0) {
-            level5PlayingScreen = false;
-            showWinningScreen=true;
-        }
-        if (level5PlayingScreen && score < 30 && elapsedTime == 20) {
-            gameOver = true;
+        if (level5PlayingScreen && score == 30) {
+            showWinningScreen = true;
         }
     }
 
@@ -226,6 +196,7 @@ public class GameLand implements Runnable, KeyListener {
         for (int x = 0; x < mouse.length; x = x + 1) {
             mouse[x] = new RegularMice((int) (Math.random() * 2100), (int) (Math.random() * 1801), (int) (Math.random() * 5.1), (int) (Math.random() * 5.1), 100, 71, true);
         }
+        goldenMouse = new Hero((int) (Math.random() * 2100), (int) (Math.random() * 1801), (int) (Math.random() * 5.1), (int) (Math.random() * 5.1), 100, 71, true);
     }
 
     public void startLevel2() {
@@ -247,11 +218,11 @@ public class GameLand implements Runnable, KeyListener {
         }
     }
 
-    public void startLevel4(){
+    public void startLevel4() {
         //reset time
-        startTime=System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         //reset score
-        score=0;
+        score = 0;
         //new mice
         mouse = new RegularMice[125];
         for (int x = 0; x < mouse.length; x = x + 1) {
@@ -259,15 +230,51 @@ public class GameLand implements Runnable, KeyListener {
         }
     }
 
-    public void startLevel5(){
+    public void startLevel5() {
         //reset time
-        startTime=System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         //reset score
-        score=0;
+        score = 0;
         //new mice
         mouse = new RegularMice[135];
         for (int x = 0; x < mouse.length; x = x + 1) {
             mouse[x] = new RegularMice((int) (Math.random() * 2100), (int) (Math.random() * 1801), (int) (Math.random() * 5.1), (int) (Math.random() * 5.1), 100, 71, true);
+        }
+    }
+
+    public void timer() {
+        //getting current time`
+        currentTime = System.currentTimeMillis();
+        //calculate elapsed time
+        if (level1PlayingScreen) {
+            elapsedTime = (int) (50 - (currentTime - startTime) * .001);
+        }
+        if (level1PlayingScreen && score < 30 && elapsedTime < 0) {
+            gameOver = true;
+        }
+        if (level2PlayingScreen) {
+            elapsedTime = (int) (45 - (currentTime - startTime) * .001);
+        }
+        if (level2PlayingScreen && score < 30 && elapsedTime < 0) {
+            gameOver = true;
+        }
+        if (level3PlayingScreen) {
+            elapsedTime = (int) (40 - (currentTime - startTime) * .001);
+        }
+        if (level3PlayingScreen && score < 30 && elapsedTime < 0) {
+            gameOver = true;
+        }
+        if (level4PlayingScreen) {
+            elapsedTime = (int) (30 - (currentTime - startTime) * .001);
+        }
+        if (level4PlayingScreen && score < 30 && elapsedTime < 0) {
+            gameOver = true;
+        }
+        if (level5PlayingScreen) {
+            elapsedTime = (int) (20 - (currentTime - startTime) * .001);
+        }
+        if (level5PlayingScreen && score < 30 && elapsedTime < 0) {
+            gameOver = true;
         }
     }
 //*******************************************************************************
@@ -282,30 +289,10 @@ public class GameLand implements Runnable, KeyListener {
         while (true) {
             moveThings();  //move all the game objects
             collisions(); //checks for rec intersectiohns
+            timer();
             render();  // paint the graphics
             pause(20); // sleep for 20 ms
-            //getting current time`
-            currentTime = System.currentTimeMillis();
-            //calculate elapsed time
-            if(level1PlayingScreen) {
-                elapsedTime = (int) (50 - (currentTime - startTime) * .001);
-            }
-            if(level2PlayingScreen){
-                elapsedTime = (int) (45 - (currentTime - startTime) * .001);
 
-            }
-            if(level3PlayingScreen){
-                elapsedTime = (int) (40 - (currentTime - startTime) * .001);
-
-            }
-            if(level4PlayingScreen){
-                elapsedTime = (int) (30 - (currentTime - startTime) * .001);
-
-            }
-            if(level5PlayingScreen){
-                elapsedTime = (int) (20 - (currentTime - startTime) * .001);
-
-            }
         }
     }
 
@@ -314,73 +301,72 @@ public class GameLand implements Runnable, KeyListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        if(startScreen){
+        if (startScreen) {
             g.drawImage(homescreen, 0, 0, WIDTH, HEIGHT, null);
         }
-        if(showRulesScreen) {
-            g.drawImage(rulesScreen, 0, 0, WIDTH, HEIGHT, null);
+        if (level1Screen) {
+            g.drawImage(level1screen, 0, 0, WIDTH, HEIGHT, null);
         }
-        if(level1Screen){
-            g.drawImage(level1screen,0,0,WIDTH, HEIGHT,null);
-        }
-        if(level1PlayingScreen){
+        if (level1PlayingScreen) {
             g.drawImage(livingRoom, 0, 0, WIDTH, HEIGHT, null);
             g.drawString("Mice Killed: " + score, 100, 100);
             g.drawString("Time left:" + elapsedTime, 900, 100);
         }
-        if(level2Screen){
+        if (level2Screen) {
             g.drawImage(level2screen, 0, 0, WIDTH, HEIGHT, null);
         }
-        if(level2PlayingScreen){
-            g.drawImage(kitchen,0,0,WIDTH, HEIGHT,null);
+        if (level2PlayingScreen) {
+            g.drawImage(kitchen, 0, 0, WIDTH, HEIGHT, null);
             g.drawString("Mice Killed: " + score, 100, 100);
             g.drawString("Time left:" + elapsedTime, 900, 100);
         }
-        if(level3Screen){
-            g.drawImage(level3screen,0,0,WIDTH, HEIGHT,null);
+        if (level3Screen) {
+            g.drawImage(level3screen, 0, 0, WIDTH, HEIGHT, null);
         }
-        if(level3PlayingScreen){
-            g.drawImage(bathroom,0,0,WIDTH, HEIGHT,null);
+        if (level3PlayingScreen) {
+            g.drawImage(bathroom, 0, 0, WIDTH, HEIGHT, null);
             g.drawString("Mice Killed: " + score, 100, 100);
             g.drawString("Time left:" + elapsedTime, 900, 100);
         }
-        if(level4Screen){
-            g.drawImage(level4screen,0,0,WIDTH, HEIGHT,null);
+        if (level4Screen) {
+            g.drawImage(level4screen, 0, 0, WIDTH, HEIGHT, null);
         }
-        if(level4PlayingScreen){
-            g.drawImage(bedroom,0,0,WIDTH, HEIGHT,null);
+        if (level4PlayingScreen) {
+            g.drawImage(bedroom, 0, 0, WIDTH, HEIGHT, null);
             g.drawString("Mice Killed: " + score, 100, 100);
             g.drawString("Time left:" + elapsedTime, 900, 100);
         }
-        if(level5Screen){
-            g.drawImage(level5screen,0,0,WIDTH, HEIGHT,null);
+        if (level5Screen) {
+            g.drawImage(level5screen, 0, 0, WIDTH, HEIGHT, null);
         }
-        if(level5PlayingScreen){
-            g.drawImage(attic,0,0,WIDTH, HEIGHT,null);
+        if (level5PlayingScreen) {
+            g.drawImage(attic, 0, 0, WIDTH, HEIGHT, null);
             g.drawString("Mice Killed: " + score, 100, 100);
             g.drawString("Time left:" + elapsedTime, 900, 100);
         }
 
-            //draw the image of your objects below:
-            /** STEP 5: draw the image of your object on the screen**/
-            if (cat!=null) {
-                g.drawImage(catPic, cat.xpos, cat.ypos, cat.width, cat.height, null);
-            }
+        //draw the image of your objects below:
+        /** STEP 5: draw the image of your object on the screen**/
+        if (cat != null && !level2Screen && !level3Screen && !level4Screen && !level5Screen) {
+            g.drawImage(catPic, cat.xpos, cat.ypos, cat.width, cat.height, null);
+        }
+        if (goldenMouse != null && goldenMouse.isAlive) {
             g.drawImage(goldenMousePic, goldenMouse.xpos, goldenMouse.ypos, goldenMouse.width, goldenMouse.height, null);
-            if(mouse!=null) {
-                for (int x = 0; x < mouse.length; x = x + 1) {
-                    if (mouse[x].isAlive == true) {
-                        g.drawImage(mousePic, mouse[x].xpos, mouse[x].ypos, mouse[x].width, mouse[x].height, null);
-                    }
+        }
+        if (mouse != null && !level2Screen && !level3Screen && !level4Screen && !level5Screen) {
+            for (int x = 0; x < mouse.length; x = x + 1) {
+                if (mouse[x].isAlive == true) {
+                    g.drawImage(mousePic, mouse[x].xpos, mouse[x].ypos, mouse[x].width, mouse[x].height, null);
                 }
             }
-
-
-        if(gameOver){
-            g.drawImage(losingScreen,0,0,WIDTH, HEIGHT,null);
         }
-        if(showWinningScreen){
-            g.drawImage(winningScreen,0,0,WIDTH, HEIGHT,null);
+
+
+        if (gameOver) {
+            g.drawImage(losingScreen, 0, 0, WIDTH, HEIGHT, null);
+        }
+        if (showWinningScreen) {
+            g.drawImage(winningScreen, 0, 0, WIDTH, HEIGHT, null);
         }
 
 
@@ -392,18 +378,18 @@ public class GameLand implements Runnable, KeyListener {
 
     public void moveThings() {
         //call the move() method code from your object class
-        if(cat!=null){ //cat!=null means if cat is not empty
+        if (cat != null) { //cat!=null means if cat is not empty
             cat.move(5);
         }
-        if(mouse!=null) {
+        if (mouse != null) {
             for (int x = 0; x < mouse.length; x = x + 1) {
                 mouse[x].bouncingMove();
             }
         }
     }
 
-    public void collisions(){
-        if(mouse!=null && cat!=null){
+    public void collisions() {
+        if (mouse != null && cat != null) {
             for (int x = 0; x < mouse.length; x = x + 1) {
                 if (mouse[x].rec.intersects(cat.rec) && mouse[x].isAlive == true) {
                     mouse[x].isAlive = false;
@@ -412,9 +398,46 @@ public class GameLand implements Runnable, KeyListener {
             }
         }
 
+        if (cat != null && goldenMouse != null && goldenMouse.isAlive == true) {
+            if (goldenMouse.rec.intersects(cat.rec) && level5PlayingScreen == true) {
+                showWinningScreen = true;
+                goldenMouse.isAlive = false;
+            } else if (goldenMouse.rec.intersects(cat.rec)) {
+                level5Screen = true;
+                goldenMouse.isAlive = false;
+            }
+        }
+
+        /** LEVEL STUFF/BOOLEANS **/
+
+        //level 1 stuff
+        if (level1PlayingScreen && score == 30) {
+            level1PlayingScreen = false;
+            level2Screen = true;
+        }
+        //level 2 stuff
+        if (level2PlayingScreen && score == 30) {
+            level2PlayingScreen = false;
+            level3Screen = true;
+        }
+        //level 3 stuff
+        if (level3PlayingScreen && score == 30) {
+            level3PlayingScreen = false;
+            level4Screen = true;
+        }
+        //level 4 stuff
+        if (level4PlayingScreen && score == 30) {
+            level4PlayingScreen = false;
+            level5Screen = true;
+        }
+        //level 5 stuff
+        if (level5PlayingScreen && score == 30) {
+            level5PlayingScreen = false;
+            showWinningScreen = true;
+        }
+
+
     }
-
-
 
 
     //Pauses or sleeps the computer for the amount specified in milliseconds
@@ -466,73 +489,65 @@ public class GameLand implements Runnable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        char key =e.getKeyChar();
+        char key = e.getKeyChar();
         int keyCode = e.getKeyCode();
-        System.out.println("Key Character: " + key + " KeyCode: "+ keyCode);
+        System.out.println("Key Character: " + key + " KeyCode: " + keyCode);
 
-        if(keyCode==40){
+        if (keyCode == 40) {
             System.out.println("down");
-            cat.downIsPressed=true;
+            cat.downIsPressed = true;
 
         }
-        if(keyCode==38){
+        if (keyCode == 38) {
             System.out.println("up");
-            cat.upIsPressed=true;
+            cat.upIsPressed = true;
         }
-        if(keyCode==39){
+        if (keyCode == 39) {
             System.out.println("right");
-            cat.rightIsPressed=true;
+            cat.rightIsPressed = true;
         }
-        if(keyCode==37){
+        if (keyCode == 37) {
             System.out.println("left");
-            cat.leftIsPressed=true;
+            cat.leftIsPressed = true;
         }
 
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        char key =e.getKeyChar();
+        char key = e.getKeyChar();
         int keyCode = e.getKeyCode();
-        System.out.println("Key Character: " + key + " KeyCode: "+ keyCode);
+        System.out.println("Key Character: " + key + " KeyCode: " + keyCode);
 
         //user control
-        if(keyCode==40){
+        if (keyCode == 40) {
             System.out.println("down");
-            cat.downIsPressed=false;
+            cat.downIsPressed = false;
 
         }
-        if(keyCode==38){
+        if (keyCode == 38) {
             System.out.println("up");
-            cat.upIsPressed=false;
+            cat.upIsPressed = false;
         }
 
-        if(keyCode==39){
+        if (keyCode == 39) {
             System.out.println("right");
-            cat.rightIsPressed=false;
+            cat.rightIsPressed = false;
         }
-        if(keyCode==37){
+        if (keyCode == 37) {
             System.out.println("left");
-            cat.leftIsPressed=false;
+            cat.leftIsPressed = false;
         }
 
-        if(keyCode==10){ //keyCode 10 is enter/return key
+        if (keyCode == 10) { //keyCode 10 is enter/return key
             runCorrectLevel();
             System.out.println("10 is pressed");
+            if (gameOver == true) {
+                gameOver = false;
+                startScreen = true;
+            }
         }
 
 
     }
 }
-
-//this makes fred dissapear when they collide
-//fred.isAlive=false;
-//fred.dx=0;
-//fred.dy=0;
-//fred.xpos=2000;
-
-//bounces objects off of each other
-//fred.dx=-(fred.dx);
-//fred.dy=-(fred.dx);
-//SEC1.dx=-(SEC1.dx);
-//SEC1.dy=-(SEC1.dy);
